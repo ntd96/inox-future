@@ -1,0 +1,238 @@
+/* ==============================================
+   popup-single-steel.css
+   Requires: Font Awesome, Slick Carousel
+============================================== */
+/* Khi Slick chưa chạy: Chỉ hiện slide đầu tiên, ẩn các slide còn lại */
+.steel-modal-slider:not(.slick-initialized) .steel-modal-slide ~ .steel-modal-slide {
+  display: none;
+}
+
+/* Giữ khung cố định cho slider khi đang tải */
+.steel-modal-slider:not(.slick-initialized) {
+  overflow: hidden;
+  display: block;
+  min-height: 280px; /* Bằng đúng chiều cao ảnh của bạn */
+}
+/* Overlay */
+.steel-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  overflow-y: auto;
+  padding: 32px 16px;
+}
+.steel-modal-overlay.is-open {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Box */
+.steel-modal-box {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 720px;
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  animation: steelModalIn .25s ease;
+}
+@keyframes steelModalIn {
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);   }
+}
+
+/* ── Slider wrap ── */
+.steel-modal-slider-wrap {
+  position: relative;
+  background: #111;
+}
+.steel-modal-slider .steel-modal-slide img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Close button */
+.steel-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.45);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s;
+}
+.steel-modal-close:hover { background: rgba(0, 0, 0, 0.75); }
+
+/* Badge */
+.steel-modal-badge {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 10;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #fff;
+  background: #b7791f;
+  padding: 4px 12px;
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+/* Slick arrows */
+.steel-modal-slider-wrap .slick-prev,
+.steel-modal-slider-wrap .slick-next {
+  width: 34px;
+  height: 34px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  z-index: 10;
+  transition: background .2s;
+}
+.steel-modal-slider-wrap .slick-prev:hover,
+.steel-modal-slider-wrap .slick-next:hover { background: rgba(0, 0, 0, 0.75); }
+.steel-modal-slider-wrap .slick-prev { left: 10px; }
+.steel-modal-slider-wrap .slick-next { right: 10px; }
+/* arrows dùng FA icon inject từ JS — override slick-theme ::before */
+.steel-modal-slider-wrap .slick-prev::before,
+.steel-modal-slider-wrap .slick-next::before { content: none; }
+.steel-modal-slider-wrap .slick-prev i,
+.steel-modal-slider-wrap .slick-next i { font-size: 13px; color: #fff; line-height: 1; }
+
+/* Slick dots */
+.steel-modal-slider-wrap .slick-dots { bottom: 12px; }
+.steel-modal-slider-wrap .slick-dots li button::before { color: rgba(255,255,255,.5); font-size: 8px; opacity: 1; }
+.steel-modal-slider-wrap .slick-dots li.slick-active button::before { color: #fff; opacity: 1; }
+
+/* ── Body ── */
+.steel-modal-body { padding: 24px 28px 28px; }
+
+.steel-modal-title    { font-size: 1.5rem; font-weight: 700; color: #111; margin: 0 0 4px; }
+.steel-modal-subtitle { font-size: 13px; color: #aaa; margin: 0 0 20px; }
+
+/* Specs */
+.steel-modal-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.steel-modal-spec-card {
+  background: #f8f8f8;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.steel-modal-spec-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 5px;
+}
+.steel-modal-spec-label i { color: #e53e3e; font-size: 12px; }
+.steel-modal-spec-value { font-size: 12px; color: #555; line-height: 1.5; margin: 0; }
+
+/* Section title */
+.steel-modal-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+}
+.steel-modal-section-title i { color: #b7791f; }
+
+/* Lists */
+.steel-modal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.steel-modal-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+}
+.steel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.steel-dot--red   { background: #e53e3e; }
+.steel-dot--amber { background: #b7791f; }
+
+/* Actions */
+.steel-modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+.steel-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.steel-btn-primary:hover { background: #c53030; }
+.steel-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.steel-btn-secondary:hover { background: #e0e0e0; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .steel-modal-specs { grid-template-columns: 1fr; }
+  .steel-modal-body  { padding: 18px 16px 22px; }
+  .steel-modal-title { font-size: 1.2rem; }
+}

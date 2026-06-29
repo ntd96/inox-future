@@ -1,0 +1,63 @@
+html {
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+   color: var(--color-text-dark);
+  position: relative;
+}
+
+* {
+  box-sizing: border-box;
+  text-wrap-style: pretty;
+}
+
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition-fast);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+font {
+    font: inherit;
+    color: inherit;
+}
+
+/* Table mặc định cho content */
+ table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+ th,
+ td {
+  border: 1px solid #e5e7eb;
+  padding: 12px 14px;
+}
+
+ th {
+  background: #f8fafc;
+  font-weight: 600;
+}

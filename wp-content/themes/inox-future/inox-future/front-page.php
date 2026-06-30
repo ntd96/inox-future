@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template Front Page — INOX FUTURE
  */

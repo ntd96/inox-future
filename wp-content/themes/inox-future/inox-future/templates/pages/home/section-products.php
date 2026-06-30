@@ -65,7 +65,7 @@
 
           <!-- Count -->
           <div class="sidebar-count">
-            <p>Hiển thị <span class="count-num">12</span> sản phẩm</p>
+            <p>Hiển thị <span class="count-num"></span> sản phẩm</p>
           </div>
         </div>
       </aside>
@@ -77,15 +77,15 @@
         </div><!-- /.products-grid -->
 
         <!-- Pagination -->
-        <div class="pagination">
-          <button class="page-btn page-btn--nav" disabled>
+        <div class="pagination" id=pagination>
+          <!-- <button class="page-btn page-btn--nav" disabled>
             <i class="fa-solid fa-chevron-left"></i>
           </button>
           <button class="page-btn page-btn--active">1</button>
           <button class="page-btn">2</button>
           <button class="page-btn page-btn--nav">
             <i class="fa-solid fa-chevron-right"></i>
-          </button>
+          </button> -->
         </div>
 
       </div><!-- /.products-grid-wrap -->

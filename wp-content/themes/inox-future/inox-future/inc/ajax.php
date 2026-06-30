@@ -82,52 +82,10 @@ function jvc_ajax_filter_posts()
 
     $pagination = render_pagination($paged, $result->max_num_pages, true);
 
-    /**
-     * POST TPE : videos
-     * json chỉ dành chi videos post type
-     */
-    $videos = [];
-    if ($config['post_type'] == 'videos') {
-
-        $term_id = !empty($cats) ? $cats[0] : 0;
-
-        // Lấy tags của term hiện tại
-        $tag_terms = get_terms([
-            'taxonomy'   => $config['taxonomy_tag'] ?: 'post_tag',
-            'hide_empty' => false, // Chỉ lấy tag có bài
-            'object_ids' => get_posts([ // Chỉ lấy tag thuộc platform này
-                'post_type'      => 'videos',
-                'posts_per_page' => -1,
-                'fields'         => 'ids',
-                'tax_query'      => [[
-                    'taxonomy' => $config['taxonomy_cat'],
-                    'terms'    => $term_id,
-                ]],
-            ]),
-        ]);
-
-        $term    = $term_id ? get_term($term_id) : null;
-
-        $fields = get_fields('videos_platform_tax_' . $term->term_id);
-        $videos = [
-            'color'       => $fields['backgroup_color_start'] ?: '#000',
-            'name'        => $term->name,
-            'video_new'   => pll__('Video mới nhất'),
-            'view_all' => pll__('Xem Tất Cả') . ' <i class="ri-arrow-right-line"></i>',
-            'icon'        => $fields['icon'] ?: '',
-            'channel_url' => $fields['link'] ?: '',
-            'has_more'    => $paged < $result->max_num_pages,
-            'tags' => array_map(fn($t) => [
-                'id'   => $t->term_id,
-                'name' => $t->name,
-            ], $tag_terms ?: []),
-        ];
-    }
-
     wp_send_json_success([
         'html' => $html,
         'pagination' => $pagination,
-        'videos' => $videos,
+        'found'      => $result->found_posts,
     ]);
 }
 

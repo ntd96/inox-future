@@ -25,6 +25,7 @@ function equalHeightByMax(wrapper, itemSelector, minWidth = 568) {
     formSelector,
     resultSelector,
     paginationSelector,
+    countSelector,
   } = {}) {
     let form = $(formSelector)[0];
     let formData = new FormData(form);
@@ -45,8 +46,12 @@ function equalHeightByMax(wrapper, itemSelector, minWidth = 568) {
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
-          $(resultSelector).html(res.data.html);
-          $(paginationSelector).html(res.data.pagination);
+          $(resultSelector).html(res.data.html); // cập nhật kết quả
+          $(paginationSelector).html(res.data.pagination); // cập nhật pagination
+          // cập nhật count
+          if (countSelector && typeof res.data.found !== "undefined") {
+            $(countSelector).text(res.data.found);
+          }
         }
       })
       .catch((err) => {
@@ -63,8 +68,9 @@ function equalHeightByMax(wrapper, itemSelector, minWidth = 568) {
 jQuery(function ($) {
   var filterConfig = {
     formSelector: "#form-filter-steel",
-    resultSelector: ".products-grid-wrap",
+    resultSelector: ".products-grid",
     paginationSelector: ".pagination",
+    countSelector: ".count-num",
   };
 
   /* ──────────────────────────────────────────
@@ -82,13 +88,15 @@ jQuery(function ($) {
 
   function openSteelModal() {
     var postId = $(this).data("product-id");
-    var $modalContainer = $("#steelModal"); // Hoặc vùng chứa modal cố định trên giao diện của bạn
+    var $modalContainer = $("#steelModal");
 
-    // 1. Mở khung modal ngoài và hiển thị Spinner chờ
+    if (!postId) {
+      console.error("Không có post-id trên .prod-card");
+      return;
+    }
+
     $modalContainer.addClass("is-open");
     $("body").css("overflow", "hidden");
-
-    // Bạn có thể tạo 1 class loading tạm thời cho modal box nếu muốn
     $modalContainer.html(
       '<div class="spinner-wrapper"><div class="spinner"></div></div>',
     );
@@ -102,20 +110,22 @@ jQuery(function ($) {
         post_id: postId,
       },
       success: function (res) {
-        if (!res.success) return;
+        console.log("AJAX success:", res);
 
-        // 2. Lấy HTML trả về (đã bao gồm toàn bộ nội dung trong file php)
+        if (!res.success) {
+          console.error("Server trả lỗi:", res.data);
+          $modalContainer.html(
+            '<p style="padding:20px;color:#fff">Lỗi: ' + res.data + "</p>",
+          );
+          return;
+        }
+
         var $htmlResponse = $(res.data.html);
-
-        // Vì file PHP trả về có sẵn thẻ <div id="steelModal"> ngoài cùng,
-        // ta chỉ lấy phần ruột bên trong của nó để đập vào container ngoài giao diện
         var modalContent = $htmlResponse.html();
         $modalContainer.html(modalContent);
 
-        // 3. Sử dụng setTimeout (khoảng 30-50ms) để DOM kịp tính toán width/height
         setTimeout(function () {
           var $currentSlider = $modalContainer.find(".steel-modal-slider");
-
           if ($currentSlider.length) {
             $currentSlider.slick({
               dots: true,
@@ -129,11 +139,15 @@ jQuery(function ($) {
               nextArrow:
                 '<button type="button" class="slick-next"><i class="fa-solid fa-chevron-right"></i></button>',
             });
-
-            // Ép buộc Slick căn chỉnh vị trí chuẩn đét ngay lập tức
             $currentSlider.slick("setPosition");
           }
         }, 50);
+      },
+      error: function (xhr, status, err) {
+        console.error("AJAX lỗi:", status, err, xhr.responseText);
+        $modalContainer.html(
+          '<p style="padding:20px;color:#fff">Có lỗi xảy ra, vui lòng thử lại.</p>',
+        );
       },
     });
   }
@@ -168,20 +182,45 @@ jQuery(function ($) {
      SEARCH
   ────────────────────────────────────────── */
   var searchTimer;
-  $(document).on("input", "#steel-search", function () {
+  $(document).on("input", ".search-input", function () {
     clearTimeout(searchTimer);
     var keyword = $(this).val();
+    // bỏ qua nếu đang gõ dở (dưới 2 ký tự), trừ khi xóa hết về rỗng (để reset về "tất cả")
+    if (keyword.length > 0 && keyword.length < 2) return;
     searchTimer = setTimeout(function () {
       $('#form-filter-steel input[name="search_posts"]').val(keyword);
       loadPosts({ ...filterConfig, paged: 1 });
-    }, 400);
+    }, 1000);
   });
 
   /* ──────────────────────────────────────────
      PAGINATION
   ────────────────────────────────────────── */
-  $(document).on("click", ".page-btn:not(.page-btn--nav)", function () {
-    loadPosts({ ...filterConfig, paged: parseInt($(this).text()) });
+  $(document).on("click", ".pagination a.page-numbers", function (e) {
+    e.preventDefault();
+
+    var $this = $(this);
+    var pageNum;
+
+    if ($this.hasClass("next")) {
+      // lấy số trang hiện tại + 1
+      pageNum = parseInt($(".pagination .current").text()) + 1;
+    } else if ($this.hasClass("prev")) {
+      pageNum = parseInt($(".pagination .current").text()) - 1;
+    } else {
+      // link số trang thường, lấy trực tiếp text (ví dụ "2")
+      pageNum = parseInt($this.text());
+    }
+
+    if (!pageNum || isNaN(pageNum)) return;
+
+    loadPosts({ ...filterConfig, paged: pageNum });
+
+    // cuộn lên đầu khu vực sản phẩm cho mượt
+    $("html, body").animate(
+      { scrollTop: $(".products-grid-wrap").offset().top - 100 },
+      300,
+    );
   });
 
   /* ──────────────────────────────────────────
